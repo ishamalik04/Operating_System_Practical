@@ -1,0 +1,77 @@
+// Scan and C-Scan disk scheduling algorithm 
+
+#include<stdio.h>
+#include<stdlib.h>
+
+int compare(const void*a , const void*b)
+{
+    return (*(int*)a-*(int*)b);
+}
+
+void CSCAN(int arr[],int head,int size,int disk_size)
+{
+    int seek_count=0;
+    int distance,current;
+    int left[size],right[size];
+    int left_size=0,right_size=0;
+    left[left_size++]=0;
+    right[right_size++]=disk_size-1;
+    
+    for(int i=0;i<size;i++)
+    {
+        if(arr[i]<head)
+        {
+            left[left_size++]=arr[i];
+        }
+        if(arr[i]>head)
+        {
+            right[right_size++]=arr[i];
+        }
+    }
+    
+    qsort(left,left_size,sizeof(int),compare);
+    qsort(right,right_size,sizeof(int),compare);
+    
+    for(int i=0;i<right_size;i++)
+    {
+        current=right[i];
+        distance=abs(current-head);
+        seek_count+=distance;
+        head=current;
+    }
+    
+    head=0;
+    seek_count+=(disk_size-1);
+    
+    for(int i=0;i<left_size;i++)
+    {
+        current=left[i];
+        distance=abs(head-current);
+        seek_count+=distance;
+        head=current;
+    }
+    printf("\ntotal seek time is: %d\t",seek_count);
+}
+int main()
+{
+    int disk_size,head,size;
+    printf("\nenter array size: \t");
+    scanf("%d",&size);
+    int arr[size];
+    printf("\nenter array elements: \n");
+    for(int i=0;i<size;i++)
+    {
+        scanf("%d",&arr[i]);
+    }
+    printf("\nenter disk size: \t");
+    scanf("%d",&disk_size);
+    printf("\nenter head position: \t");
+    scanf("%d",&head);
+    CSCAN(arr,head,size,disk_size);
+}
+
+
+
+
+
+
