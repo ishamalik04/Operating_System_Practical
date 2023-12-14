@@ -1,0 +1,112 @@
+#include<stdio.h>
+#include<stdbool.h>
+
+int search(int key,int fr[],int frame)
+{
+    for(int i=0;i<frame;i++)
+    {
+        if(key==fr[i])
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int findLRU(int indexes[],int frame_size)
+{
+    int lruindex=0;
+    int lru=indexes[0];
+    for(int i=1;i<frame_size;i++)
+    {
+        if(indexes[i]<lru)
+        {
+            lru=indexes[i];
+            lruindex=i;
+        }
+    }
+    return lruindex;
+}
+
+void updateIndex(int indexes[],int frame_size,int page,int currIndex)
+{
+    for(int i=0;i<frame_size;i++)
+    {
+        if(indexes[i]==currIndex)
+        {
+            indexes[i]=page;
+            return;
+        }
+    }
+}
+
+int LRU(int pages[],int page_count,int frame_count)
+{
+    int frames[frame_count];
+    int indexes[frame_count];
+    for(int i=0;i<frame_count;i++)
+    {
+        frames[i]=-1;
+        indexes[i]=0;
+    }
+    int page_faults=0;
+    for(int i=0;i<page_count;i++)
+    {
+        if(!search(pages[i],frames,frame_count))
+        {
+            int lruindex=findLRU(indexes,frame_count);
+            frames[lruindex]=pages[i];
+            indexes[lruindex]=i+1;
+            page_faults++;
+            
+        }
+        else
+        {
+            updateIndex(indexes,frame_count,pages[i],i+1);
+        }
+    }
+    return page_faults;
+}
+
+int main()
+{
+    int page_count,frame_count;
+    printf("\nenter page count: \t");
+    scanf("%d",&page_count);
+    int pages[page_count];
+    printf("\nenter sequence of page numbers: \t");
+    for(int i=0;i<page_count;i++)
+    {
+        scanf("%d",&pages[i]);
+    }
+    printf("\nenter number of frames: \t");
+    scanf("%d",&frame_count);
+    int page_faults=LRU(pages,page_count,frame_count);
+    printf("\nNo. of page faults are: %d\t",page_faults);
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
