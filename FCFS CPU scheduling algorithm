@@ -1,0 +1,95 @@
+//FCFS CPU scheduling algorithm 
+
+#include<stdio.h>
+struct Process 
+{
+    int pid;
+    int arrTime;
+    int burstTime;
+    int startTime;
+    int finishTime;
+    int turnaroundTime;
+    int waitingTime;
+};
+void calculateAvg(struct Process p[],int n)
+{
+    float avgTat=0,avgWt=0,avgRt=0;
+    for(int i=0;i<n;i++)
+    {
+        p[i].turnaroundTime=p[i].finishTime-p[i].arrTime;
+        p[i].waitingTime=p[i].turnaroundTime-p[i].burstTime;
+        avgRt+=p[i].waitingTime;
+        avgTat+=p[i].turnaroundTime;
+        avgWt+=p[i].waitingTime;
+    }
+    avgTat/=n;
+    avgWt/=n;
+    avgRt/=n;
+    
+    printf("\nAverage Turnaround Time: %.2f\n",avgTat);
+    printf("\nAverage waiting Time: %.2f\n",avgWt);
+    printf("\nAverage Response Time: %.2f\n",avgRt);
+}
+
+int main()
+{
+    int n;
+    printf("\nenter number of processes: \t");
+    scanf("%d",&n);
+    struct Process p[n];
+    printf("\nenter arrival time and burst time for each process: \n");
+    for(int i=0;i<n;i++)
+    {
+        p[i].pid=i+1;
+        printf("Process %d: ",i+1);
+        scanf("%d%d",&p[i].arrTime,&p[i].burstTime);
+    }
+    int currTime=0;
+    int context_switches=0;
+    for(int i=0;i<n;i++)
+    {
+        if(p[i].arrTime>currTime)
+        {
+            currTime=p[i].arrTime;
+        }
+        p[i].startTime=currTime;
+        p[i].finishTime=currTime+p[i].burstTime;
+        currTime=p[i].finishTime;
+        context_switches++;
+    }
+    
+    printf("\nProcess Execution order:\n");
+    printf("PID\tstart time\tfinish time\n");
+    for(int i=0;i<n;i++)
+    {
+        printf("%d\t%d\t\t%d\n",p[i].pid,p[i].startTime,p[i].finishTime);
+    }
+    printf("\nNumber of context switches: %d\n",context_switches);
+    calculateAvg(p,n);
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
