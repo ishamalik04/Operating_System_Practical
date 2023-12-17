@@ -1,0 +1,21 @@
+// demonstration of wait system call 
+
+#include<stdio.h>
+#include<sys/wait.h>
+#include<unistd.h> 
+
+int main()
+{
+    if(fork()==0)
+    {
+        printf("\nHC:hello from child\n");
+    }
+    else
+    {
+        printf("\nHP: hello from parent\n");
+        wait(NULL);
+        printf("\nCT:child has terminated\n");
+    }
+    printf("Bye");
+    return 0;
+}
